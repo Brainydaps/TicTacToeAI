@@ -10,7 +10,8 @@ A cross-platform mobile & desktop app built with **.NET MAUI** that lets you tra
 
 ## 📸 Screenshots
 
-> *(Add screenshots of the Training and Play pages here)*
+<img width="1920" height="1080" alt="TicTacToeAI" src="https://github.com/user-attachments/assets/474d1557-4b0d-4d06-b2c5-31992293edc7" />
+
 
 ---
 
