@@ -1,17 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>TicTacToeAI</RootNamespace>
@@ -21,7 +13,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>TicTacToeAI</ApplicationTitle>
+		<ApplicationTitle>TicTacToe AI</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.tictactoeai</ApplicationId>
@@ -30,24 +22,37 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<!-- App Icon: logo.png (1280x1280).
+		     BaseSize larger than the image content forces the resizetizer to
+		     scale the image DOWN, adding natural padding so the logo sits centred
+		     inside the icon frame rather than filling it edge-to-edge.
+		     ForegroundScale shrinks the foreground layer on Android adaptive icons
+		     so the logo lands inside the 66% safe zone and is not clipped/zoomed. -->
+		<MauiIcon Include="Resources\AppIcon\appicon.png"
+		          BaseSize="1800,1800"
+		          ForegroundScale="0.65"
+		          Color="#1a1a2e" />
 
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<!-- Splash Screen: header.png (8353x1582, ratio ~5.28:1). -->
+		<MauiSplashScreen Include="Resources\Splash\header.png"
+		                  BaseSize="480,91"
+		                  Color="#1a1a2e" />
 
-		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
+		<!-- Images (exclude logo.png — handled by MauiIcon).
+		     header.png is included here as a normal image so it can be
+		     referenced in XAML (MainPage header banner). -->
+		<MauiImage Include="Resources\Images\*"
+		           Exclude="Resources\Images\logo.png" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<MauiImage Update="Resources\Images\header.png"     Resize="True" BaseSize="480,91" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -58,8 +63,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
 </Project>

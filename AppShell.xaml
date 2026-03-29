@@ -4,8 +4,14 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TicTacToeAI"
+    xmlns:pages="clr-namespace:TicTacToeAI.Pages"
     Shell.FlyoutBehavior="Disabled"
-    Title="TicTacToeAI">
+    Shell.NavBarIsVisible="True"
+    Shell.BackgroundColor="#16213e"
+    Shell.ForegroundColor="#e94560"
+    Shell.TitleColor="#eaeaea"
+    Shell.UnselectedColor="#888888"
+    Title="TicTacToe AI">
 
     <ShellContent
         Title="Home"

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using TicTacToeAI.Pages;
+using TicTacToeAI.Services;
 
 namespace TicTacToeAI
 {
@@ -15,8 +16,18 @@ namespace TicTacToeAI
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            // Register services
+            builder.Services.AddSingleton<RewardCalculator>();
+            builder.Services.AddSingleton<QTableGenerator>();
+            builder.Services.AddSingleton<TrainingService>();
+
+            // Register pages
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<TrainingPage>();
+            builder.Services.AddTransient<PlayPage>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            System.Diagnostics.Debug.WriteLine("Debug logging enabled");
 #endif
 
             return builder.Build();

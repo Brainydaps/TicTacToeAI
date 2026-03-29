@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TicTacToeAI.Pages.PlayPage"
+             Title="Play"
+             BackgroundColor="#1a1a2e">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Padding="20" RowSpacing="15">
+
+        <!-- Agent Info Bar -->
+        <Border Grid.Row="0" BackgroundColor="#16213e" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8">
+                <VerticalStackLayout>
+                    <Label x:Name="AgentInfoLabel"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#e94560" />
+                    <Label x:Name="SideInfoLabel"
+                           Text="Agent plays X (first) • You play O"
+                           FontSize="11"
+                           TextColor="#888888" />
+                </VerticalStackLayout>
+
+                <!-- Side Picker -->
+                <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="10" HorizontalOptions="Center">
+                    <Label Text="Play as:" FontSize="13" TextColor="#aaaaaa" VerticalOptions="Center" />
+                    <Border x:Name="PickXBorder" BackgroundColor="#16213e" Padding="10,6" Stroke="#333333" StrokeThickness="2" StrokeShape="RoundRectangle 8">
+                        <Label Text="✕  X (1st)" FontSize="14" FontAttributes="Bold" TextColor="#e94560" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPickX" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="PickOBorder" BackgroundColor="#103040" Padding="10,6" Stroke="#4fc3f7" StrokeThickness="2" StrokeShape="RoundRectangle 8">
+                        <Label Text="◯  O (2nd)" FontSize="14" FontAttributes="Bold" TextColor="#4fc3f7" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPickO" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Score Board -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="10">
+            <Border BackgroundColor="#1a4a1a" Padding="8" Stroke="Transparent" StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout HorizontalOptions="Center">
+                    <Label Text="Agent Wins" FontSize="10" TextColor="#88cc88" HorizontalTextAlignment="Center" />
+                    <Label x:Name="AgentWinsLabel" Text="0" FontSize="22" FontAttributes="Bold" TextColor="#44ff44" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+            <Border Grid.Column="1" BackgroundColor="#3a3a1a" Padding="8" Stroke="Transparent" StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout HorizontalOptions="Center">
+                    <Label Text="Draws" FontSize="10" TextColor="#cccc88" HorizontalTextAlignment="Center" />
+                    <Label x:Name="DrawsLabel" Text="0" FontSize="22" FontAttributes="Bold" TextColor="#ffff44" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+            <Border Grid.Column="2" BackgroundColor="#4a1a1a" Padding="8" Stroke="Transparent" StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout HorizontalOptions="Center">
+                    <Label Text="Your Wins" FontSize="10" TextColor="#cc8888" HorizontalTextAlignment="Center" />
+                    <Label x:Name="PlayerWinsLabel" Text="0" FontSize="22" FontAttributes="Bold" TextColor="#ff4444" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <!-- Status Label -->
+        <Label x:Name="StatusLabel"
+               Grid.Row="2"
+               Text="AI is thinking..."
+               FontSize="18"
+               FontAttributes="Bold"
+               TextColor="#eaeaea"
+               HorizontalTextAlignment="Center" />
+
+        <!-- Tic-Tac-Toe Board -->
+        <Grid Grid.Row="3"
+              x:Name="BoardGrid"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              RowDefinitions="*,*,*"
+              ColumnDefinitions="*,*,*"
+              RowSpacing="6"
+              ColumnSpacing="6"
+              WidthRequest="320"
+              HeightRequest="320">
+
+            <!-- Row 0 -->
+            <Button x:Name="Cell0" Grid.Row="0" Grid.Column="0"
+                    ClassId="0" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+            <Button x:Name="Cell1" Grid.Row="0" Grid.Column="1"
+                    ClassId="1" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+            <Button x:Name="Cell2" Grid.Row="0" Grid.Column="2"
+                    ClassId="2" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+
+            <!-- Row 1 -->
+            <Button x:Name="Cell3" Grid.Row="1" Grid.Column="0"
+                    ClassId="3" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+            <Button x:Name="Cell4" Grid.Row="1" Grid.Column="1"
+                    ClassId="4" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+            <Button x:Name="Cell5" Grid.Row="1" Grid.Column="2"
+                    ClassId="5" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+
+            <!-- Row 2 -->
+            <Button x:Name="Cell6" Grid.Row="2" Grid.Column="0"
+                    ClassId="6" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+            <Button x:Name="Cell7" Grid.Row="2" Grid.Column="1"
+                    ClassId="7" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+            <Button x:Name="Cell8" Grid.Row="2" Grid.Column="2"
+                    ClassId="8" Clicked="OnCellClicked"
+                    FontSize="42" FontAttributes="Bold"
+                    BackgroundColor="#16213e" TextColor="#eaeaea"
+                    CornerRadius="12" />
+        </Grid>
+
+        <!-- New Game Button -->
+        <Button x:Name="NewGameButton"
+                Grid.Row="4"
+                Text="🔄 New Game"
+                FontSize="18"
+                BackgroundColor="#0f3460"
+                TextColor="White"
+                CornerRadius="12"
+                HeightRequest="55"
+                Clicked="OnNewGame" />
+    </Grid>
+</ContentPage>
+

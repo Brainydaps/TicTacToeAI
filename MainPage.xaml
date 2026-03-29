@@ -1,35 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TicTacToeAI.MainPage">
+             x:Class="TicTacToeAI.MainPage"
+             Title="TicTacToe AI"
+             BackgroundColor="#1a1a2e">
 
-    <Grid Padding="10"
-          HorizontalOptions="Center"
-          VerticalOptions="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="0,0,0,30" VerticalOptions="Start">
 
-        <!-- Button for selecting agent -->
-        <Button Grid.Row="0" Grid.ColumnSpan="3" Text="Select Agent" Clicked="OnSelectAgentClicked" FontSize="20" />
+            <!-- Header banner — header.png fills the full page width -->
+            <Image Source="header.png"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Fill"
+                   Margin="0" />
 
-        <!-- Tic-Tac-Toe buttons -->
-        <Button x:Name="Button0" ClassId="0" Grid.Row="1" Grid.Column="0" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button1" ClassId="1" Grid.Row="1" Grid.Column="1" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button2" ClassId="2" Grid.Row="1" Grid.Column="2" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button3" ClassId="3" Grid.Row="2" Grid.Column="0" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button4" ClassId="4" Grid.Row="2" Grid.Column="1" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button5" ClassId="5" Grid.Row="2" Grid.Column="2" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button6" ClassId="6" Grid.Row="3" Grid.Column="0" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button7" ClassId="7" Grid.Row="3" Grid.Column="1" Clicked="Button_Clicked" FontSize="30"/>
-        <Button x:Name="Button8" ClassId="8" Grid.Row="3" Grid.Column="2" Clicked="Button_Clicked" FontSize="30"/>
-    </Grid>
+            <VerticalStackLayout Spacing="20" Padding="30,0">
+
+            <Label Text="Q-Learning Agent"
+                   FontSize="16"
+                   TextColor="#aaaaaa"
+                   HorizontalOptions="Center" />
+
+            <BoxView HeightRequest="2" Color="#e94560" Margin="40,0" />
+
+            <!-- Agent Selection -->
+            <Border BackgroundColor="#16213e" Padding="20" Stroke="Transparent"
+                    StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Select Agent"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#eaeaea" />
+                    <Label Text="Each agent has different learning characteristics"
+                           FontSize="13"
+                           TextColor="#aaaaaa" />
+                    <Picker x:Name="AgentPicker"
+                            Title="Choose an Agent"
+                            TextColor="#eaeaea"
+                            TitleColor="#888888"
+                            FontSize="16"
+                            SelectedIndexChanged="OnAgentSelected">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Balanced (α=0.5, γ=0.5)</x:String>
+                                <x:String>Quick Myopic (α=0.95, γ=0.05)</x:String>
+                                <x:String>Quick Overplanner (α=0.95, γ=0.95)</x:String>
+                                <x:String>Slow Myopic (α=0.05, γ=0.05)</x:String>
+                                <x:String>Slow Overplanner (α=0.05, γ=0.95)</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Agent Info Card -->
+            <Border x:Name="AgentInfoFrame"
+                   BackgroundColor="#0f3460"
+                   Padding="20"
+                   Stroke="Transparent"
+                   StrokeShape="RoundRectangle 15"
+                   IsVisible="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label x:Name="AgentNameLabel"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#e94560" />
+                    <Label x:Name="AgentParamsLabel"
+                           FontSize="14"
+                           TextColor="#cccccc" />
+                    <Label x:Name="AgentQTableLabel"
+                           FontSize="13"
+                           TextColor="#888888" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Action Buttons -->
+            <Button x:Name="TrainButton"
+                    Text="🏋️ Train Agent"
+                    FontSize="18"
+                    BackgroundColor="#e94560"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="55"
+                    IsEnabled="False"
+                    Clicked="OnTrainClicked" />
+
+            <Button x:Name="PlayButton"
+                    Text="🎯 Play Against Agent"
+                    FontSize="18"
+                    BackgroundColor="#0f3460"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="55"
+                    IsEnabled="False"
+                    Clicked="OnPlayClicked" />
+
+            <!-- Footer -->
+            <Label Text="Choose to play as X or O before each game"
+                   FontSize="12"
+                   TextColor="#666666"
+                   HorizontalOptions="Center"
+                   Margin="0,20,0,0" />
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

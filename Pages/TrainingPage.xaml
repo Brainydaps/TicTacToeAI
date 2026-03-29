@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TicTacToeAI.Pages.TrainingPage"
+             Title="Train Agent"
+             BackgroundColor="#1a1a2e">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="Center">
+
+            <!-- Title -->
+            <Label Text="🏋️ Training Center"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#e94560"
+                   HorizontalOptions="Center" />
+
+            <!-- Agent Info -->
+            <Border BackgroundColor="#16213e" Padding="20" Stroke="Transparent" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Training Agent:"
+                           FontSize="14"
+                           TextColor="#888888" />
+                    <Label x:Name="AgentNameLabel"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#e94560" />
+                    <Label x:Name="AgentParamsLabel"
+                           FontSize="14"
+                           TextColor="#cccccc" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Iterations Config -->
+            <Border BackgroundColor="#16213e" Padding="20" Stroke="Transparent" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Games per Training Player"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#eaeaea" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Slider x:Name="IterationsSlider"
+                                Minimum="500"
+                                Maximum="10000"
+                                Value="2000"
+                                ValueChanged="OnIterationsChanged"
+                                MinimumTrackColor="#e94560"
+                                MaximumTrackColor="#333333"
+                                ThumbColor="#e94560" />
+                        <Label x:Name="IterationsLabel"
+                               Grid.Column="1"
+                               Text="2000"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#e94560"
+                               WidthRequest="60"
+                               HorizontalTextAlignment="End" />
+                    </Grid>
+                    <Label Text="Total games = iterations × 4 players"
+                           FontSize="12"
+                           TextColor="#666666" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Training Mode -->
+            <Border BackgroundColor="#16213e" Padding="20" Stroke="Transparent" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Training Mode"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#eaeaea" />
+                    <Label Text="Choose which side the agent learns to play"
+                           FontSize="12"
+                           TextColor="#888888" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border x:Name="ModeXBorder" Grid.Column="0" BackgroundColor="#4a1a1a" Padding="14,10" Stroke="#e94560" StrokeThickness="2" StrokeShape="RoundRectangle 8" HorizontalOptions="Fill">
+                            <Label Text="✕ Train as X" FontSize="14" FontAttributes="Bold" TextColor="#e94560" HorizontalTextAlignment="Center" />
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnModeX" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border x:Name="ModeOBorder" Grid.Column="1" BackgroundColor="#16213e" Padding="14,10" Stroke="#333333" StrokeThickness="2" StrokeShape="RoundRectangle 8" HorizontalOptions="Fill">
+                            <Label Text="◯ Train as O" FontSize="14" FontAttributes="Bold" TextColor="#4fc3f7" HorizontalTextAlignment="Center" />
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnModeO" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border x:Name="ModeBothBorder" Grid.Column="2" BackgroundColor="#16213e" Padding="14,10" Stroke="#333333" StrokeThickness="2" StrokeShape="RoundRectangle 8" HorizontalOptions="Fill">
+                            <Label Text="⚡ Both" FontSize="14" FontAttributes="Bold" TextColor="#ffcc44" HorizontalTextAlignment="Center" />
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnModeBoth" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                    <Label x:Name="ModeDescriptionLabel"
+                           Text="Agent plays first as X — original training"
+                           FontSize="11"
+                           TextColor="#666666"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Progress Section -->
+            <Border x:Name="ProgressFrame"
+                   BackgroundColor="#0f3460"
+                   Padding="20"
+                   Stroke="Transparent"
+                   StrokeShape="RoundRectangle 15"
+                   IsVisible="False">
+                <VerticalStackLayout Spacing="12">
+                    <Label x:Name="CurrentPlayerLabel"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#eaeaea" />
+
+                    <ProgressBar x:Name="TrainingProgressBar"
+                                 Progress="0"
+                                 ProgressColor="#e94560"
+                                 HeightRequest="8" />
+
+                    <Label x:Name="ProgressLabel"
+                           FontSize="13"
+                           TextColor="#aaaaaa" />
+
+                    <!-- Stats Grid -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border BackgroundColor="#1a4a1a" Padding="10" Stroke="Transparent" StrokeShape="RoundRectangle 10">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Wins" FontSize="11" TextColor="#88cc88" HorizontalTextAlignment="Center" />
+                                <Label x:Name="WinsLabel" Text="0" FontSize="20" FontAttributes="Bold" TextColor="#44ff44" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="#4a1a1a" Padding="10" Stroke="Transparent" StrokeShape="RoundRectangle 10">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Losses" FontSize="11" TextColor="#cc8888" HorizontalTextAlignment="Center" />
+                                <Label x:Name="LossesLabel" Text="0" FontSize="20" FontAttributes="Bold" TextColor="#ff4444" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" BackgroundColor="#3a3a1a" Padding="10" Stroke="Transparent" StrokeShape="RoundRectangle 10">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Draws" FontSize="11" TextColor="#cccc88" HorizontalTextAlignment="Center" />
+                                <Label x:Name="DrawsLabel" Text="0" FontSize="20" FontAttributes="Bold" TextColor="#ffff44" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <Label x:Name="OverallProgressLabel"
+                           FontSize="12"
+                           TextColor="#888888"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Learning Progress Graph -->
+            <Border x:Name="GraphFrame"
+                   BackgroundColor="#0a0a1a"
+                   Padding="5"
+                   Stroke="#1a1a3a"
+                   StrokeThickness="1"
+                   StrokeShape="RoundRectangle 12"
+                   IsVisible="False">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="📈 Learning Progress"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="#4fc3f7"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,5,0,0" />
+                    <Label Text="Win=1pt  Draw=0.5pt  Loss=0pt  •  Learning% = Points / Games × 100"
+                           FontSize="9"
+                           TextColor="#555555"
+                           HorizontalTextAlignment="Center" />
+                    <GraphicsView x:Name="LearningGraphView"
+                                  HeightRequest="200"
+                                  HorizontalOptions="Fill" />
+                    <Label x:Name="LearningPercentLabel"
+                           Text="Learning: 0.0%"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="#4fc3f7"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,5" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Buttons -->
+            <Button x:Name="StartTrainingButton"
+                    Text="▶️ Start Full Training"
+                    FontSize="18"
+                    BackgroundColor="#e94560"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="55"
+                    Clicked="OnStartTraining" />
+
+            <Button x:Name="CancelButton"
+                    Text="⏹ Cancel Training"
+                    FontSize="16"
+                    BackgroundColor="#555555"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    IsVisible="False"
+                    Clicked="OnCancelTraining" />
+
+            <!-- Completion Message -->
+            <Border x:Name="CompletionFrame"
+                   BackgroundColor="#1a4a1a"
+                   Padding="20"
+                   Stroke="Transparent"
+                   StrokeShape="RoundRectangle 15"
+                   IsVisible="False">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="✅ Training Complete!"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#44ff44"
+                           HorizontalTextAlignment="Center" />
+                    <Label x:Name="CompletionSummary"
+                           FontSize="14"
+                           TextColor="#cccccc"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
